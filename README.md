@@ -19,7 +19,7 @@ USING
 
 Put `libnvram-faker.so` somewhere in your firmware's extracted filesystem.  Edit `nvram.ini` and put it in the root of the firmware's filesystem.  If you want to put the configuration file somewhere else, define `INI_FILE_PATH` at compile time however you like[1].  Set the `LD_PRELOAD` environment variable to load the library.
 
-Every nvram query and the answer returned will be printed to the console's standard output.  If the answer is not found, NULL is returned by `nvram_get` and the query is printed to the console in red, so it will easy to notice.
+Every nvram query and the answer returned will be printed to standard output.  If the answer is not found, NULL is returned by `nvram_get` and the query is printed to the console in red, so it will easy to notice.
 
 The library currently does not support calls to `nvram_set()`.
 
