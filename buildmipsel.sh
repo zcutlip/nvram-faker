@@ -1,8 +1,6 @@
 #!/bin/sh
 
 export ARCH=mipsel
-export PATH=/opt/gcc/mipsel/host/usr/bin:$PATH
-
 TARGET=$1
 
 # Sets up toolchain environment variables for various mips toolchain
