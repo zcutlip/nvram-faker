@@ -29,7 +29,7 @@ ACKNOWLEDGMENTS
 
 I shamelessly aped this idea from Craig Heffner <cheffner@tacnetsol.com>, ([@devttyS0](https://twitter.com/devttyS0) on Twitter).  I improved on it by adding support for INI configuration and colorized console output.
 
-INI support is provided by this excellent [project](http://code.google.com/p/inih/), which I have included this source tree.
+INI support is provided by this excellent [project](http://code.google.com/p/inih/), which I have included in this source tree.
 
 ---
 
