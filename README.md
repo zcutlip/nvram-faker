@@ -16,6 +16,7 @@ You can build the shared library, `libnvram-faker.so`, simply by typing `make`. 
 
 USING
 -------------------------
+
 Put `libnvram-faker.so` somewhere in your firmware's extracted filesystem.  Edit `nvram.ini` and put it in the root of the firmware's filesystem.  If you want to put the configuration file somewhere else, define `INI_FILE_PATH` however you like[1].  Set the `LD_PRELOAD` environment variable to load the library.
 
 Every nvram query and the answer returned will be printed to the console's standard output.  If the answer is not found, NULL is returned by `nvram_get` and the query is printed to the console in red, so it will easy to notice.
@@ -23,5 +24,13 @@ Every nvram query and the answer returned will be printed to the console's stand
 The library currently does not support calls to `nvram_set()`.
 
 
+ACKNOWLEDGMENTS
+-------------------------
+
+I shamelessly aped this idea from Craig Heffner <cheffner@tacnetsol.com>, ([@devttyS0](https://twitter.com/devttyS0) on Twitter).  I improved on it by adding support for INI configuration and colorized console output.
+
+INI support is provided by this excellent [project](http://code.google.com/p/inih/), which I have included in this project's source.
+
+---
 
 [1] You can export a `CFLAGS` environment variable on the command line to do this.
