@@ -29,13 +29,13 @@ static int ini_handler(void *user, const char *section, const char *name,const c
     
     if(NULL == user || NULL == section || NULL == name || NULL == value)
     {
-        printf("bad parameter to ini_handler\n");
+        fprintf(stderr,"bad parameter to ini_handler\n");
         return 0;
     }
     kv = *((char ***)user);
     if(NULL == kv)
     {
-        printf("kv is NULL\n");
+        fprintf(stderr,"kv is NULL\n");
         return 0;
     }
     
@@ -46,7 +46,7 @@ static int ini_handler(void *user, const char *section, const char *name,const c
         new_kv=(char **)malloc(key_value_pair_len);
         if(NULL == kv)
         {
-            printf("Failed to reallocate key value array.\n");
+            fprintf(stderr,"Failed to reallocate key value array.\n");
             return 0;
         }
         for(i=0;i<old_kv_len;i++)
@@ -57,7 +57,7 @@ static int ini_handler(void *user, const char *section, const char *name,const c
         kv=new_kv;
         *(char ***)user=kv;
     }
-    printf("Got %s:%s\n",name,value);
+    fprintf(stderr,"Got %s:%s\n",name,value);
     kv[kv_count++]=strdup(name);
     kv[kv_count++]=strdup(value);
     
@@ -67,22 +67,22 @@ static int ini_handler(void *user, const char *section, const char *name,const c
 void initialize_ini(void)
 {
     int ret;
-    printf("Initializing.\n");
+    fprintf(stderr,"Initializing.\n");
     if (NULL == key_value_pairs)
     {
         key_value_pairs=malloc(key_value_pair_len);
     }
     if(NULL == key_value_pairs)
     {
-        printf("Failed to allocate memory for key value array. Terminating.\n");
+        fprintf(stderr,"Failed to allocate memory for key value array. Terminating.\n");
         exit(1);
     }
     
     ret = ini_parse(INI_FILE_PATH,ini_handler,(void *)&key_value_pairs);
-    printf("ret from ini_parse was: %d\n",ret);
+    fprintf(stderr,"ret from ini_parse was: %d\n",ret);
     if (0 != ret)
     {
-        printf("INI parse failed. Terminating\n");
+        fprintf(stderr,"INI parse failed. Terminating\n");
         free(key_value_pairs);
         key_value_pairs=NULL;
         exit(1);
@@ -115,7 +115,7 @@ char *nvram_get(const char *key)
     {
         if(strcmp(key,key_value_pairs[i]) == 0)
         {
-            printf("%s=%s\n",key,key_value_pairs[i+1]);
+            fprintf(stderr,"%s=%s\n",key,key_value_pairs[i+1]);
             found = 1;
             value=key_value_pairs[i+1];
             break;
@@ -125,7 +125,7 @@ char *nvram_get(const char *key)
     ret = NULL;
     if(!found)
     {
-            printf( RED_ON"%s=Unknown\n"RED_OFF,key);
+            fprintf(stderr, RED_ON"%s=Unknown\n"RED_OFF,key);
     }else
     {
 
