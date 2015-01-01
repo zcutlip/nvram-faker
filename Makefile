@@ -24,7 +24,7 @@ $(INI_OBJ):
 	$(CC) $(INCLUDES) $(CFLAGS) -fPIC -c -o $@ $<
 
 $(LIB): $(OBJS) $(INI_OBJ)
-	$(CC) -shared -o $@ $^ -Wl,-nostdlib -ldl
+	$(CC) -shared -o $@ $^ -Wl,-nostdlib
 
 clean:
 	-rm *.o

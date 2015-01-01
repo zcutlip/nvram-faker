@@ -20,42 +20,20 @@ http://code.google.com/p/inih/
 #define MAX_SECTION 50
 #define MAX_NAME 50
 
-/* writing my own implementation of isspace */
-int myisspace(int c){
-    if(c == ' ')
-        return 1;
-    else if(c == '\t')
-        return 1;
-    else if(c == '\v')
-        return 1;
-    else if(c == '\r')
-        return 1;
-    else if(c == '\n')
-        return 1;
-    else
-        return 0;
-}
-     
 /* Strip whitespace chars off end of given string, in place. Return s. */
 static char* rstrip(char* s)
 {
-    int i;
-    char* p; 
-
-    p=s+strlen(s);
-    while (p > s && myisspace((int)(*(--p)))){
+    char* p = s + strlen(s);
+    while (p > s && isspace((unsigned char)(*--p)))
         *p = '\0';
-    }
-
     return s;
 }
 
 /* Return pointer to first non-whitespace char in given string. */
 static char* lskip(const char* s)
 {
-    while (*s && myisspace((unsigned char)(*s))){
+    while (*s && isspace((unsigned char)(*s)))
         s++;
-    }
     return (char*)s;
 }
 
@@ -66,7 +44,7 @@ static char* find_char_or_comment(const char* s, char c)
 {
     int was_whitespace = 0;
     while (*s && *s != c && !(was_whitespace && *s == ';')) {
-        was_whitespace = myisspace((unsigned char)(*s));
+        was_whitespace = isspace((unsigned char)(*s));
         s++;
     }
     return (char*)s;
@@ -114,7 +92,6 @@ int ini_parse_file(FILE* file,
         lineno++;
 
         start = line;
-
 #if INI_ALLOW_BOM
         if (lineno == 1 && (unsigned char)start[0] == 0xEF &&
                            (unsigned char)start[1] == 0xBB &&
@@ -122,7 +99,6 @@ int ini_parse_file(FILE* file,
             start += 3;
         }
 #endif
-
         start = lskip(rstrip(start));
 
         if (*start == ';' || *start == '#') {
