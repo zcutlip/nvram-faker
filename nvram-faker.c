@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "nvram-faker.h"
+//include before ini.h to override ini.h defaults
+#include "nvram-faker-internal.h"
 #include "ini.h"
 
 #define RED_ON "\033[22;31m"
@@ -29,13 +31,13 @@ static int ini_handler(void *user, const char *section, const char *name,const c
     
     if(NULL == user || NULL == section || NULL == name || NULL == value)
     {
-        printf("bad parameter to ini_handler\n");
+        DEBUG_PRINTF("bad parameter to ini_handler\n");
         return 0;
     }
     kv = *((char ***)user);
     if(NULL == kv)
     {
-        printf("kv is NULL\n");
+        LOG_PRINTF("kv is NULL\n");
         return 0;
     }
     
@@ -46,7 +48,7 @@ static int ini_handler(void *user, const char *section, const char *name,const c
         new_kv=(char **)malloc(key_value_pair_len);
         if(NULL == kv)
         {
-            printf("Failed to reallocate key value array.\n");
+            LOG_PRINTF("Failed to reallocate key value array.\n");
             return 0;
         }
         for(i=0;i<old_kv_len;i++)
@@ -57,7 +59,7 @@ static int ini_handler(void *user, const char *section, const char *name,const c
         kv=new_kv;
         *(char ***)user=kv;
     }
-    printf("Got %s:%s\n",name,value);
+    DEBUG_PRINTF("Got %s:%s\n",name,value);
     kv[kv_count++]=strdup(name);
     kv[kv_count++]=strdup(value);
     
@@ -67,25 +69,29 @@ static int ini_handler(void *user, const char *section, const char *name,const c
 void initialize_ini(void)
 {
     int ret;
-    printf("Initializing.\n");
+    DEBUG_PRINTF("Initializing.\n");
     if (NULL == key_value_pairs)
     {
         key_value_pairs=malloc(key_value_pair_len);
     }
     if(NULL == key_value_pairs)
     {
-        printf("Failed to allocate memory for key value array. Terminating.\n");
+        LOG_PRINTF("Failed to allocate memory for key value array. Terminating.\n");
         exit(1);
     }
     
     ret = ini_parse(INI_FILE_PATH,ini_handler,(void *)&key_value_pairs);
-    printf("ret from ini_parse was: %d\n",ret);
+    
     if (0 != ret)
     {
-        printf("INI parse failed. Terminating\n");
+        LOG_PRINTF("ret from ini_parse was: %d\n",ret);
+        LOG_PRINTF("INI parse failed. Terminating\n");
         free(key_value_pairs);
         key_value_pairs=NULL;
         exit(1);
+    }else
+    {
+        DEBUG_PRINTF("ret from ini_parse was: %d\n",ret);
     }
     
     return;
@@ -115,7 +121,7 @@ char *nvram_get(const char *key)
     {
         if(strcmp(key,key_value_pairs[i]) == 0)
         {
-            printf("%s=%s\n",key,key_value_pairs[i+1]);
+            LOG_PRINTF("%s=%s\n",key,key_value_pairs[i+1]);
             found = 1;
             value=key_value_pairs[i+1];
             break;
@@ -125,7 +131,7 @@ char *nvram_get(const char *key)
     ret = NULL;
     if(!found)
     {
-            printf( RED_ON"%s=Unknown\n"RED_OFF,key);
+            LOG_PRINTF( RED_ON"%s=Unknown\n"RED_OFF,key);
     }else
     {
 
