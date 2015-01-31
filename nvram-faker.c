@@ -39,7 +39,7 @@ static int ini_handler(void *user, const char *section, const char *name,const c
     {
         old_kv_len=key_value_pair_len;
         key_value_pair_len=(key_value_pair_len * 2);
-        new_kv=(char **)malloc(key_value_pair_len);
+        new_kv=(char **)malloc(key_value_pair_len * sizeof(char **));
         if(NULL == kv)
         {
             LOG_PRINTF("Failed to reallocate key value array.\n");
