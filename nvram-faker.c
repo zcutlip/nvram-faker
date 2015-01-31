@@ -10,16 +10,9 @@
 #define RED_OFF "\033[22;00m"
 #define DEFAULT_KV_PAIR_LEN 1024
 
-#ifndef INI_FILE_PATH
-#define INI_FILE_PATH "/nvram.ini"
-#endif
-
 static int kv_count=0;
 static int key_value_pair_len=DEFAULT_KV_PAIR_LEN;
 static char **key_value_pairs=NULL;
-
-void initialize_ini(void) __attribute__((constructor));
-void end(void) __attribute__((destructor));
 
 static int ini_handler(void *user, const char *section, const char *name,const char *value)
 {
@@ -41,6 +34,7 @@ static int ini_handler(void *user, const char *section, const char *name,const c
         return 0;
     }
     
+    DEBUG_PRINTF("kv_count: %d, key_value_pair_len: %d\n", kv_count,key_value_pair_len);
     if(kv_count >= key_value_pair_len)
     {
         old_kv_len=key_value_pair_len;
@@ -72,7 +66,7 @@ void initialize_ini(void)
     DEBUG_PRINTF("Initializing.\n");
     if (NULL == key_value_pairs)
     {
-        key_value_pairs=malloc(key_value_pair_len);
+        key_value_pairs=malloc(key_value_pair_len * sizeof(char **));
     }
     if(NULL == key_value_pairs)
     {
@@ -81,7 +75,6 @@ void initialize_ini(void)
     }
     
     ret = ini_parse(INI_FILE_PATH,ini_handler,(void *)&key_value_pairs);
-    
     if (0 != ret)
     {
         LOG_PRINTF("ret from ini_parse was: %d\n",ret);
