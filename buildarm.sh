@@ -11,11 +11,11 @@ warn()
 	echo "$1" >&2
 }
 
-if [ ! -z $(which arm-linux-gcc-5.4.0) ];
+if [ ! -z $(which arm-linux-gcc) ];
 then
-	export CC=$(which arm-linux-gcc-5.4.0)
+	export CC=$(which arm-linux-gcc)
 else
-	warn "Not setting CC: can't locate arm-linux-gcc-5.4.0."
+	warn "Not setting CC: can't locate arm-linux-gcc."
 fi
 
 if [ ! -z $(which arm-linux-ld) ];
